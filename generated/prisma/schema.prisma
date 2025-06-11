@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  password     String
+  name         String
+  createdAt    DateTime   @default(now())
+  teams        TeamUser[]
+  tasks        Task[]
+  createdTasks Task[]     @relation("createdTasks")
+}
+
+model Team {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime   @default(now())
+  members     TeamUser[]
+  tasks       Task[]
+}
+
+model TeamUser {
+  user     User     @relation(fields: [userId], references: [id])
+  team     Team     @relation(fields: [teamId], references: [id])
+  userId   Int
+  teamId   Int
+  role     String // "MEMBER" ou "ADMIN"
+  joinedAt DateTime @default(now())
+
+  @@id([userId, teamId])
+}
+
+model Task {
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String?
+  status       String    @default("PENDING") // "PENDING", "IN_PROGRESS", "COMPLETED"
+  priority     String    @default("MEDIUM") // "LOW", "MEDIUM", "HIGH"
+  dueDate      DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  creator      User      @relation("createdTasks", fields: [creatorId], references: [id])
+  creatorId    Int
+  team         Team      @relation(fields: [teamId], references: [id])
+  teamId       Int
+  assignedTo   User?     @relation(fields: [assignedToId], references: [id])
+  assignedToId Int?
+}

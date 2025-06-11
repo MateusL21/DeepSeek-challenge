@@ -1,0 +1,27 @@
+{
+  "name": "team-task-management",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "migrate": "prisma migrate dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-rate-limit": "^6.11.2",
+    "helmet": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.9.0"
+  }
+}
