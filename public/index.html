@@ -3,25 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TeamTask - Gerenciamento de Tarefas</title>
     <link rel="stylesheet" href="style.css" />
-    <title>Team Task Management API</title>
   </head>
   <body>
     <div class="container">
-      <h1>Team Task Management API</h1>
-      <p>Bem-vindo à API de gerenciamento de tarefas em equipe</p>
+      <header>
+        <h1>TeamTask</h1>
+        <p>Gerenciamento colaborativo de tarefas</p>
+      </header>
 
-      <h2>Endpoints disponíveis:</h2>
-      <div class="endpoint">GET / - Esta página</div>
-      <div class="endpoint">GET /health - Health check da API</div>
-      <div class="endpoint">POST /auth/register - Registrar novo usuário</div>
-      <div class="endpoint">POST /auth/login - Login de usuário</div>
-      <div class="endpoint">GET /teams - Listar times (autenticado)</div>
+      <div id="auth-forms">
+        <!-- Formulário de Login -->
+        <form id="login-form" class="auth-form">
+          <h2>Login</h2>
+          <div class="form-group">
+            <label for="login-email">Email:</label>
+            <input type="email" id="login-email" required />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Senha:</label>
+            <input type="password" id="login-password" required />
+          </div>
+          <button type="submit">Entrar</button>
+          <p class="form-toggle">
+            Não tem conta? <a href="#" id="show-register">Registre-se</a>
+          </p>
+        </form>
 
-      <p>
-        Para acessar os endpoints JSON, adicione
-        <code>Accept: application/json</code> no header da requisição.
-      </p>
+        <!-- Formulário de Registro -->
+        <form id="register-form" class="auth-form" style="display: none">
+          <h2>Registro</h2>
+          <div class="form-group">
+            <label for="register-name">Nome:</label>
+            <input type="text" id="register-name" required />
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email:</label>
+            <input type="email" id="register-email" required />
+          </div>
+          <div class="form-group">
+            <label for="register-password">Senha:</label>
+            <input type="password" id="register-password" required />
+          </div>
+          <button type="submit">Registrar</button>
+          <p class="form-toggle">
+            Já tem conta? <a href="#" id="show-login">Faça login</a>
+          </p>
+        </form>
+      </div>
+
+      <div id="dashboard" style="display: none">
+        <h2>Bem-vindo, <span id="user-greeting"></span>!</h2>
+        <div class="actions">
+          <button id="view-teams">Ver Meus Times</button>
+          <button id="create-team">Criar Novo Time</button>
+          <button id="logout">Sair</button>
+        </div>
+      </div>
     </div>
+
+    <script src="auth.js"></script>
   </body>
 </html>
