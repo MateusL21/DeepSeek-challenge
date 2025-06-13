@@ -12,3 +12,24 @@ Content-Type: application/json
   "email": "mateus@example.com",
   "password": "senha123"
 }
+
+
+### POST 
+
+POST http://localhost:5000/teams
+Content-Type: application/json
+
+{
+  "name": "Team Alpha",
+  "description": "This is a team for project Alpha."
+}
+
+### POST 
+POST http://localhost:5000/teams/:teamId/tasks
+Content-Type: application/json
+
+{
+  "title": "Task 1",
+  "description": "This is the first task for Team Alpha.",
+  "dueDate": "2023-12-31"
+}

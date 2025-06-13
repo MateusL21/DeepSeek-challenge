@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Meus Times | TeamTask</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Meus Times</h1>
+        <a href="/" style="color: #4f46e5">← Voltar para o Dashboard</a>
+      </header>
+
+      <!-- Formulário de Criação -->
+      <form id="create-team-form" class="auth-form" style="margin-bottom: 30px">
+        <h2>Criar Novo Time</h2>
+        <div class="form-group">
+          <label for="team-name">Nome do Time:</label>
+          <input type="text" id="team-name" required />
+        </div>
+        <button type="submit">Salvar</button>
+      </form>
+
+      <!-- Tabela de Times -->
+      <div id="teams-table">
+        <h2>Times Criados</h2>
+        <table style="width: 100%; border-collapse: collapse">
+          <thead>
+            <tr style="background-color: #f1f5f9">
+              <th
+                style="
+                  padding: 10px;
+                  text-align: left;
+                  border-bottom: 1px solid #e2e8f0;
+                "
+              >
+                Nome
+              </th>
+              <th
+                style="
+                  padding: 10px;
+                  text-align: left;
+                  border-bottom: 1px solid #e2e8f0;
+                "
+              >
+                Ações
+              </th>
+            </tr>
+          </thead>
+          <tbody id="teams-list"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="teams.js"></script>
+  </body>
+</html>

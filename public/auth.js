@@ -1,3 +1,4 @@
+// public/auth.js
 document.addEventListener("DOMContentLoaded", () => {
   // Elementos do DOM
   const loginForm = document.getElementById("login-form");
@@ -8,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const dashboard = document.getElementById("dashboard");
   const userGreeting = document.getElementById("user-greeting");
   const logoutBtn = document.getElementById("logout");
+  const createTeamBtn = document.getElementById("create-team");
+  const viewTeamsBtn = document.getElementById("view-teams");
 
   // Alternar entre login e registro
   showRegister.addEventListener("click", (e) => {
@@ -30,21 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // Login
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const email = document.getElementById("login-email").value;
     const password = document.getElementById("login-password").value;
 
     try {
       const response = await fetch("/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-
       if (response.ok) {
         localStorage.setItem("token", data.token);
         showDashboard();
@@ -59,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Registro
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const name = document.getElementById("register-name").value;
     const email = document.getElementById("register-email").value;
     const password = document.getElementById("register-password").value;
@@ -67,14 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch("/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
 
       const data = await response.json();
-
       if (response.ok) {
         localStorage.setItem("token", data.token);
         showDashboard();
@@ -89,10 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Logout
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("token");
-    dashboard.style.display = "none";
-    authForms.style.display = "block";
-    loginForm.style.display = "block";
-    registerForm.style.display = "none";
+    window.location.href = "/";
   });
 
   // Mostrar dashboard
@@ -100,21 +92,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    // Decodificar o token para obter informações do usuário
     const payload = JSON.parse(atob(token.split(".")[1]));
     userGreeting.textContent = payload.name;
-
     authForms.style.display = "none";
     dashboard.style.display = "block";
   }
 
-  // Botões do dashboard
-  document.getElementById("view-teams").addEventListener("click", () => {
-    window.location.href = "/teams";
+  // Navegação
+  viewTeamsBtn.addEventListener("click", async () => {
+    try {
+      const response = await fetch("/teams", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      const teams = await response.json();
+      displayTeams(teams); // Mostrar lista de equipes (implementar função)
+    } catch (error) {
+      alert("Erro ao carregar equipes");
+    }
   });
 
-  document.getElementById("create-team").addEventListener("click", () => {
-    // Implementar criação de time
-    alert("Funcionalidade de criar time será implementada");
+  createTeamBtn.addEventListener("click", async () => {
+    const teamName = prompt("Nome da equipe:");
+    if (!teamName) return;
+
+    try {
+      const response = await fetch("/teams", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ name: teamName }),
+      });
+
+      if (response.ok) {
+        alert("Equipe criada com sucesso!");
+      } else {
+        const error = await response.json();
+        alert(error.error || "Erro ao criar equipe");
+      }
+    } catch (error) {
+      alert("Erro ao conectar com o servidor");
+    }
   });
 });

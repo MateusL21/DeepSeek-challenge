@@ -52,8 +52,44 @@ class Server {
     this.app.use("/tasks", taskRoutes);
 
     // Frontend route
+    // Adicione esta rota
     this.app.get("/", (req, res) => {
+      // Se for uma requisição API, retorne JSON
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.json({
+          status: "online",
+          endpoints: {
+            auth: ["POST /auth/register", "POST /auth/login"],
+            teams: ["GET /teams", "POST /teams"],
+            tasks: ["GET /teams/:teamId/tasks", "POST /teams/:teamId/tasks"],
+          },
+        });
+      }
+
+      // Caso contrário, sirva o frontend
       res.sendFile(path.join(__dirname, "../public", "index.html"));
+    });
+
+    // Adicione isso após as rotas
+    this.app.use((err, req, res, next) => {
+      logger.error("Erro não tratado:", {
+        error: err,
+        body: req.body,
+        url: req.originalUrl,
+        stack: err.stack,
+      });
+
+      res.status(500).json({
+        error: "Erro interno no servidor",
+        requestId: req.id, // Adicione um request ID se estiver usando
+        ...(process.env.NODE_ENV === "development" && {
+          message: err.message,
+          stack: err.stack,
+        }),
+      });
     });
   }
 
